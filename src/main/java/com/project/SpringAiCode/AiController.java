@@ -13,8 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AiController {
     private final ChatClient chatClient;
 
-    public AiController(OpenAiChatModel chatModel) {
-        this.chatClient = ChatClient.create(chatModel);
+//    Use this injection when it is certain that we are using openAI LLM only.
+//    public AiController(OpenAiChatModel chatModel) {
+//        this.chatClient = ChatClient.create(chatModel);
+//    }
+
+//    Use this if we want to make use of any LLM's like OpenAI, Gemini, Llama etc. It is more generic.
+    public AiController(ChatClient.Builder chatClientBuilder){
+        this.chatClient = chatClientBuilder.build();
     }
 
     @GetMapping("/api/{message}")
