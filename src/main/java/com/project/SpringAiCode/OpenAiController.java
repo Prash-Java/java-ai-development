@@ -27,6 +27,7 @@ public class OpenAiController {
                 .build();
     }
 
+    // Prompts will be static and like this => localhost:8080/api/what is java? This will be done by Https.Get microservice.
     @GetMapping("/api/{message}")
     public ResponseEntity<String> getResponseFromPrompt(@PathVariable String message) {
         String response = "";
@@ -45,6 +46,7 @@ public class OpenAiController {
         return ResponseEntity.ok("No Response To Send...");
     }
 
+//    Prompts will be Parametric/Dynamic like this => localhost:8080/api/recommend?programmingLanguage=Java&bookLanguage=English served by Https.POST microservice.
     @PostMapping("/api/recommend")
     public String recommendBooks(@RequestParam String programmingLanguage, @RequestParam String bookLanguage){
         String template = """
