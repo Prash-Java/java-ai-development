@@ -4,22 +4,20 @@ package com.project.SpringAiCode;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AiController {
+public class OpenAiController {
     private final ChatClient chatClient;
     ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
 
     // Using Advisor, we can have memory advisor and LLM will remember the earlier chats and context.
-    public AiController(ChatClient.Builder chatClientBuilder) {
+    public OpenAiController(ChatClient.Builder chatClientBuilder) {
         this.chatClient = chatClientBuilder
                 .defaultAdvisors(MessageChatMemoryAdvisor
                         .builder(chatMemory)
@@ -52,17 +50,17 @@ public class AiController {
 
 
 //    Use this injection when it is certain that we are using openAI LLM only.
-//    public AiController(OpenAiChatModel chatModel) {
+//    public OpenAiController(OpenAiChatModel chatModel) {
 //        this.chatClient = ChatClient.create(chatModel);
 //    }
 
 //    Use this if we want to make use of any LLM's like OpenAI, Gemini, Llama etc. It is more generic. This chat client would not remember the earlier chat via LLM,
-//    public AiController(ChatClient.Builder chatClientBuilder){
+//    public OpenAiController(ChatClient.Builder chatClientBuilder){
 //        this.chatClient = chatClientBuilder.build();
 //    }
 
     // Using Advisor, we can have memory advisor and LLM will remember the earlier chats and context.
-//    public AiController(ChatClient.Builder chatClientBuilder) {
+//    public OpenAiController(ChatClient.Builder chatClientBuilder) {
 //        this.chatClient = chatClientBuilder
 //                .defaultAdvisors(new InMemoryChatMemoryRepository(new InMemoryChatMemoryRepository()))
 //                .build();
