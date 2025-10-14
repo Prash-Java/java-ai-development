@@ -8,6 +8,8 @@ import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,8 @@ import java.util.Map;
 @RestController
 public class OpenAiController {
     private final ChatClient chatClient;
+    @Autowired
+    private EmbeddingModel embeddingModel;
     ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
 
     // Using Advisor, we can have memory advisor and LLM will remember the earlier chats and context.
@@ -58,6 +62,30 @@ public class OpenAiController {
                 .prompt(prompt)
                 .call()
                 .content();
+    }
+
+//    Relatable objects in n-dimensions using Embeddings,
+    @PostMapping("/api/embedding")
+    public float[] embedding(@RequestParam String text){
+        return embeddingModel.embed(text);
+    }
+
+//    Get similarity of two objects.
+    @PostMapping
+    public double getSimilarity(@RequestParam String text1, String text2){
+        float[] embedding1 = embeddingModel.embed(text1);
+        float[] embedding2 = embeddingModel.embed(text2);
+        double dotProduct = 0;
+        double value1 = 0;
+        double value2 = 0;
+        for (int i = 0; i < embedding1.length; i++) {
+            dotProduct += embedding1[i] * embedding2[i];
+            value1 += Math.pow(embedding1[i],2);
+            value2 += Math.pow(embedding2[i],2);
+        }
+
+        return dotProduct / (Math.sqrt(value1) * Math.sqrt(value2));
+        
     }
 }
 
